@@ -1,0 +1,83 @@
+Int 4
+
+Rijndael Alg
+
+import javax.crypto.*;
+import java.util.*;
+
+class Rijndael {
+    public static void main(String[] args) throws Exception {
+        KeyGenerator kg = KeyGenerator.getInstance("AES");
+        kg.init(128);
+        SecretKey k = kg.generateKey();
+
+        Cipher c = Cipher.getInstance("AES");
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter text: ");
+        String s = sc.nextLine();
+
+        c.init(Cipher.ENCRYPT_MODE, k);
+        byte[] e = c.doFinal(s.getBytes());
+        System.out.println("Encrypted: " +
+            Base64.getEncoder().encodeToString(e));
+
+        c.init(Cipher.DECRYPT_MODE, k);
+        System.out.println("Decrypted: " + new String(c.doFinal(e)));
+    }
+}
+
+RC4 - BlowFish
+
+import javax.crypto.*;
+import javax.crypto.spec.*;
+import java.util.*;
+
+class Crypto {
+    public static void main(String[] args) throws Exception {
+        String s = "Hello world";
+
+        // RC4
+        SecretKeySpec k1 = new SecretKeySpec(
+            "MySecretKey".getBytes(), "RC4");
+        Cipher c1 = Cipher.getInstance("RC4");
+        c1.init(Cipher.ENCRYPT_MODE, k1);
+        byte[] e1 = c1.doFinal(s.getBytes());
+        System.out.println("RC4: " +
+            Base64.getEncoder().encodeToString(e1));
+
+        // Blowfish
+        KeyGenerator kg = KeyGenerator.getInstance("Blowfish");
+        SecretKey k2 = kg.generateKey();
+        Cipher c2 = Cipher.getInstance("Blowfish");
+        c2.init(Cipher.ENCRYPT_MODE, k2);
+        byte[] e2 = c2.doFinal(s.getBytes());
+        System.out.println("Blowfish: " +
+            Base64.getEncoder().encodeToString(e2));
+    }
+}
+
+
+SHA-1
+
+import java.util.*;
+import java.security.*;
+
+class SHA1 {
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the text: ");
+        String s = sc.nextLine();
+
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        byte[] digest = md.digest(s.getBytes());
+
+        StringBuilder hex = new StringBuilder();
+
+        for (byte b : digest) {
+            hex.append(String.format("%02x", b & 0xff));
+        }
+
+        System.out.println("Message Digest: " + hex);
+    }
+}
